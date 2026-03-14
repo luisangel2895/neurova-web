@@ -37,8 +37,10 @@ describe("marketing page views", () => {
       'script[type="application/ld+json"]',
     );
     expect(schemaScript).not.toBeNull();
-    expect(schemaScript?.innerHTML).toContain('"@type":"SoftwareApplication"');
+    expect(schemaScript?.innerHTML).toContain('"@type":"MobileApplication"');
     expect(schemaScript?.innerHTML).toContain('"@type":"FAQPage"');
+    expect(schemaScript?.innerHTML).toContain('"@type":"Organization"');
+    expect(schemaScript?.innerHTML).toContain('"@type":"BreadcrumbList"');
   });
 
   it("renders the english support page with localized contact actions", () => {

@@ -14,6 +14,12 @@ import { SiteFooter, SiteHeader } from "@/components/marketing/site-chrome";
 import { StructuredData } from "@/components/marketing/structured-data";
 import { SupportForm } from "@/components/marketing/support-form";
 import { localizedPath, type Locale } from "@/lib/i18n";
+import {
+  buildBreadcrumbSchema,
+  buildOrganizationSchema,
+  getLocalizedAbsoluteUrl,
+  toAbsoluteUrl,
+} from "@/lib/seo";
 import { getSiteCopy } from "@/lib/site-content";
 import { siteConfig } from "@/lib/site-config";
 import { formatLongDate } from "@/lib/utils";
@@ -21,15 +27,21 @@ import { formatLongDate } from "@/lib/utils";
 export function HomePageView({ locale }: { locale: Locale }) {
   const copy = getSiteCopy(locale);
   const pagePath = localizedPath(locale, "/");
+  const pageUrl = getLocalizedAbsoluteUrl(locale, "/");
 
   const softwareApplicationSchema = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
+    "@type": "MobileApplication",
     name: siteConfig.name,
     applicationCategory: "EducationalApplication",
     operatingSystem: "iOS",
     description: copy.seo.home.description,
-    url: `${siteConfig.siteUrl}${pagePath === "/" ? "" : pagePath}`,
+    url: pageUrl,
+    image: toAbsoluteUrl(siteConfig.mediaAssets.logo),
+    screenshot: siteConfig.mediaAssets.iphoneScreenshots.map((shot) =>
+      toAbsoluteUrl(shot.src),
+    ),
+    inLanguage: locale,
     offers: {
       "@type": "Offer",
       price: "0",
@@ -55,12 +67,27 @@ export function HomePageView({ locale }: { locale: Locale }) {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: siteConfig.name,
-    url: `${siteConfig.siteUrl}${pagePath === "/" ? "" : pagePath}`,
+    url: pageUrl,
   };
+
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    {
+      name: copy.navigation.home,
+      url: pageUrl,
+    },
+  ]);
 
   return (
     <>
-      <StructuredData data={[softwareApplicationSchema, faqSchema, websiteSchema]} />
+      <StructuredData
+        data={[
+          buildOrganizationSchema(locale),
+          softwareApplicationSchema,
+          faqSchema,
+          websiteSchema,
+          breadcrumbSchema,
+        ]}
+      />
       <div className="relative min-h-screen overflow-x-clip bg-page">
         <div className="page-noise" />
         <SiteHeader locale={locale} currentPath={pagePath} />
@@ -76,17 +103,30 @@ export function HomePageView({ locale }: { locale: Locale }) {
 export function SupportPageView({ locale }: { locale: Locale }) {
   const copy = getSiteCopy(locale);
   const pagePath = localizedPath(locale, "/support");
+  const pageUrl = getLocalizedAbsoluteUrl(locale, "/support");
   const contactPageSchema = {
     "@context": "https://schema.org",
     "@type": "ContactPage",
     name: `${siteConfig.name} ${copy.seo.support.title}`,
-    url: `${siteConfig.siteUrl}${pagePath}`,
+    url: pageUrl,
     description: copy.support.schemaDescription,
   };
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    {
+      name: copy.navigation.home,
+      url: getLocalizedAbsoluteUrl(locale, "/"),
+    },
+    {
+      name: copy.navigation.support,
+      url: pageUrl,
+    },
+  ]);
 
   return (
     <>
-      <StructuredData data={contactPageSchema} />
+      <StructuredData
+        data={[buildOrganizationSchema(locale), contactPageSchema, breadcrumbSchema]}
+      />
       <div className="relative min-h-screen overflow-x-clip bg-page">
         <div className="page-noise" />
         <SiteHeader locale={locale} currentPath={pagePath} />
@@ -259,17 +299,30 @@ export function SupportSuccessPageView({ locale }: { locale: Locale }) {
 export function PrivacyPageView({ locale }: { locale: Locale }) {
   const copy = getSiteCopy(locale);
   const pagePath = localizedPath(locale, "/privacy");
+  const pageUrl = getLocalizedAbsoluteUrl(locale, "/privacy");
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
     name: `${siteConfig.name} ${copy.seo.privacy.title}`,
-    url: `${siteConfig.siteUrl}${pagePath}`,
+    url: pageUrl,
     description: copy.privacy.schemaDescription,
   };
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    {
+      name: copy.navigation.home,
+      url: getLocalizedAbsoluteUrl(locale, "/"),
+    },
+    {
+      name: copy.navigation.privacy,
+      url: pageUrl,
+    },
+  ]);
 
   return (
     <>
-      <StructuredData data={webPageSchema} />
+      <StructuredData
+        data={[buildOrganizationSchema(locale), webPageSchema, breadcrumbSchema]}
+      />
       <div className="relative min-h-screen overflow-x-clip bg-page">
         <div className="page-noise" />
         <SiteHeader locale={locale} currentPath={pagePath} />

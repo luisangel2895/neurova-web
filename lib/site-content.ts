@@ -51,14 +51,14 @@ export const siteContent = {
         "app iOS para estudiar",
       ],
       home: {
-        title: `${siteConfig.name} | Flujo de estudio inteligente para iPhone`,
+        title: `${siteConfig.name} | App de estudio para iPhone con flashcards, OCR y repeticion espaciada`,
         description:
-          "Landing oficial de Neurova con funcionalidades, capturas, soporte y politica de privacidad para la app de estudio en iOS.",
+          "Neurova es una app de estudio para iPhone con flashcards, repeticion espaciada, OCR desde apuntes e imagenes, generacion asistida de tarjetas, insights, rachas y sincronizacion privada con iCloud.",
       },
       support: {
-        title: "Soporte",
+        title: "Soporte oficial",
         description:
-          "Contacta con el soporte oficial de Neurova para ayuda con sincronizacion, OCR, datos de estudio y problemas generales.",
+          "Contacta con el soporte oficial de Neurova para ayuda con sincronizacion en iCloud, OCR, decks, flashcards, progreso, cuentas y problemas generales de la app.",
       },
       supportSuccess: {
         title: "Solicitud recibida",
@@ -68,7 +68,7 @@ export const siteContent = {
       privacy: {
         title: "Politica de privacidad",
         description:
-          "Politica de privacidad de Neurova sobre Sign in with Apple, iCloud privado, OCR, soporte y diagnosticos del producto.",
+          "Politica de privacidad de Neurova sobre Sign in with Apple, iCloud y CloudKit privados, OCR sobre contenido del usuario, soporte y diagnosticos del producto.",
       },
     },
     navigation: {
@@ -606,14 +606,14 @@ export const siteContent = {
         "exam prep",
       ],
       home: {
-        title: `${siteConfig.name} | Intelligent study flow for iPhone`,
+        title: `${siteConfig.name} | iPhone study app with flashcards, OCR, and spaced repetition`,
         description:
-          "Official Neurova landing page with product highlights, screenshots, support, and privacy information for the iOS study app.",
+          "Neurova is an iPhone study app with flashcards, spaced repetition, OCR from notes and images, AI-assisted card creation, progress insights, streaks, and private iCloud sync.",
       },
       support: {
-        title: "Support",
+        title: "Official support",
         description:
-          "Contact Neurova support for account help, sync questions, OCR issues, and general troubleshooting.",
+          "Contact Neurova support for iCloud sync help, OCR issues, flashcards, decks, study progress, account questions, and general troubleshooting.",
       },
       supportSuccess: {
         title: "Support request received",
@@ -623,7 +623,7 @@ export const siteContent = {
       privacy: {
         title: "Privacy Policy",
         description:
-          "Privacy Policy for Neurova, covering Sign in with Apple, private iCloud sync, OCR inputs, support communication, and product diagnostics.",
+          "Privacy Policy for Neurova covering Sign in with Apple, private iCloud and CloudKit sync, OCR inputs, support communication, and product diagnostics.",
       },
     },
     navigation: {
