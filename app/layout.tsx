@@ -1,16 +1,20 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { defaultLocale } from "@/lib/i18n";
+import { getSiteCopy } from "@/lib/site-content";
 import { siteConfig } from "@/lib/site-config";
+
+const defaultCopy = getSiteCopy(defaultLocale);
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.siteUrl),
   title: {
-    default: `${siteConfig.name} | Intelligent study flow for iPhone`,
+    default: defaultCopy.seo.home.title,
     template: `%s | ${siteConfig.name}`,
   },
-  description: siteConfig.description,
+  description: defaultCopy.seo.home.description,
   applicationName: siteConfig.name,
-  keywords: [...siteConfig.keywords],
+  keywords: [...defaultCopy.seo.keywords],
   authors: [{ name: siteConfig.name }],
   creator: siteConfig.name,
   publisher: siteConfig.name,
@@ -19,11 +23,11 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: `${siteConfig.name} | Intelligent study flow for iPhone`,
-    description: siteConfig.description,
+    title: defaultCopy.seo.home.title,
+    description: defaultCopy.seo.home.description,
     url: siteConfig.siteUrl,
     siteName: siteConfig.name,
-    locale: siteConfig.locale,
+    locale: "es_ES",
     type: "website",
     images: [
       {
@@ -36,8 +40,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} | Intelligent study flow for iPhone`,
-    description: siteConfig.description,
+    title: defaultCopy.seo.home.title,
+    description: defaultCopy.seo.home.description,
     images: ["/opengraph-image"],
   },
   robots: {
@@ -73,7 +77,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="es" className="scroll-smooth">
       <body>{children}</body>
     </html>
   );

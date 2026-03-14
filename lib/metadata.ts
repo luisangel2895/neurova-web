@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 
+import { defaultLocale, localizedPath, localeMeta, type Locale } from "@/lib/i18n";
 import { siteConfig } from "@/lib/site-config";
 
 type MetadataInput = {
+  locale: Locale;
   title: string;
   description: string;
   path: string;
@@ -10,12 +12,17 @@ type MetadataInput = {
 };
 
 export function buildMetadata({
+  locale,
   title,
   description,
   path,
   keywords,
 }: MetadataInput): Metadata {
-  const canonical = path === "/" ? siteConfig.siteUrl : `${siteConfig.siteUrl}${path}`;
+  const localizedRoute = localizedPath(locale, path);
+  const canonical =
+    localizedRoute === "/"
+      ? siteConfig.siteUrl
+      : `${siteConfig.siteUrl}${localizedRoute}`;
 
   return {
     title,
@@ -23,13 +30,18 @@ export function buildMetadata({
     keywords: Array.from(keywords ?? siteConfig.keywords),
     alternates: {
       canonical,
+      languages: {
+        es: `${siteConfig.siteUrl}${localizedPath("es", path) === "/" ? "" : localizedPath("es", path)}`,
+        en: `${siteConfig.siteUrl}${localizedPath("en", path)}`,
+        "x-default": `${siteConfig.siteUrl}${localizedPath(defaultLocale, path) === "/" ? "" : localizedPath(defaultLocale, path)}`,
+      },
     },
     openGraph: {
       title,
       description,
       url: canonical,
       siteName: siteConfig.name,
-      locale: siteConfig.locale,
+      locale: localeMeta[locale].ogLocale,
       type: "website",
       images: [
         {
