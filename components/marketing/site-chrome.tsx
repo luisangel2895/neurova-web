@@ -56,6 +56,7 @@ function LocaleSwitch({
 
 export function SiteHeader({ locale, currentPath }: SiteChromeProps) {
   const copy = getSiteCopy(locale);
+  const localizedHomePath = localizedPath(locale, "/");
   const navigation = [
     { href: localizedHashPath(locale, "features"), label: copy.navigation.features },
     { href: localizedHashPath(locale, "screenshots"), label: copy.navigation.screens },
@@ -69,7 +70,7 @@ export function SiteHeader({ locale, currentPath }: SiteChromeProps) {
       <div className="border-b border-line/60 bg-white/78 backdrop-blur-2xl">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="flex items-center justify-between gap-4 py-4">
-            <Link href="/" className="flex items-center gap-3">
+            <Link href={localizedHomePath} className="flex items-center gap-3">
               <Image
                 src={siteConfig.mediaAssets.logo}
                 alt={`${siteConfig.name} logo`}
