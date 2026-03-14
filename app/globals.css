@@ -162,7 +162,6 @@ textarea {
 
 .button-primary,
 .button-secondary,
-.button-inverse,
 .button-ghost-light,
 .pill-link {
   display: inline-flex;
@@ -183,7 +182,6 @@ textarea {
 
 .button-primary,
 .button-secondary,
-.button-inverse,
 .button-ghost-light {
   padding: 0.95rem 1.25rem;
 }
@@ -199,11 +197,6 @@ textarea {
   background: rgba(255, 255, 255, 0.84);
   color: var(--ink);
   box-shadow: var(--shadow-soft);
-}
-
-.button-inverse {
-  background: rgba(255, 255, 255, 0.96);
-  color: var(--brand-800);
 }
 
 .button-ghost-light {
@@ -222,7 +215,6 @@ textarea {
 
 .button-primary:hover,
 .button-secondary:hover,
-.button-inverse:hover,
 .button-ghost-light:hover,
 .pill-link:hover {
   transform: translateY(-1px);
