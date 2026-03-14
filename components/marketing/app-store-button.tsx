@@ -18,6 +18,7 @@ export function AppStoreButton({
   showArrow = true,
 }: AppStoreButtonProps) {
   const compact = size === "compact";
+  const isSoft = variant === "light";
 
   return (
     <a
@@ -29,9 +30,9 @@ export function AppStoreButton({
         compact
           ? "gap-3 rounded-full px-4 py-3"
           : "gap-4 rounded-[1.5rem] px-5 py-4",
-        variant === "dark"
-          ? "border-slate-900/10 bg-[linear-gradient(135deg,_#0a1222_0%,_#142640_58%,_#19324d_100%)] text-white shadow-[0_22px_52px_rgba(8,17,34,0.24)]"
-          : "border-white/35 bg-[linear-gradient(135deg,_rgba(255,255,255,0.96)_0%,_rgba(236,245,255,0.92)_100%)] text-slate-900 shadow-[0_22px_52px_rgba(20,44,104,0.2)]",
+        isSoft
+          ? "border-white/28 bg-[linear-gradient(135deg,_rgba(255,255,255,0.10)_0%,_rgba(255,255,255,0.02)_18%),linear-gradient(135deg,_#5078ff_0%,_#5c92ff_48%,_#66e3c9_100%)] text-white shadow-[0_22px_54px_rgba(53,84,184,0.24)]"
+          : "border-white/18 bg-[linear-gradient(135deg,_rgba(255,255,255,0.12)_0%,_rgba(255,255,255,0.03)_18%),linear-gradient(135deg,_#3d61ee_0%,_#5a95ff_52%,_#61e7cc_100%)] text-white shadow-[0_22px_54px_rgba(46,76,171,0.24)]",
         className,
       )}
       aria-label="Download Neurova on the App Store"
@@ -40,9 +41,9 @@ export function AppStoreButton({
         aria-hidden="true"
         className={cn(
           "pointer-events-none absolute inset-0 opacity-80",
-          variant === "dark"
-            ? "bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.14),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(102,231,204,0.16),_transparent_28%)]"
-            : "bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.58),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(90,149,255,0.12),_transparent_30%)]",
+          isSoft
+            ? "bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.34),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.12),_transparent_30%)]"
+            : "bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.22),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.10),_transparent_30%)]",
         )}
       />
 
@@ -50,30 +51,34 @@ export function AppStoreButton({
         className={cn(
           "relative inline-flex shrink-0 items-center justify-center",
           compact ? "h-11 w-11 rounded-full" : "h-12 w-12 rounded-[1.05rem]",
-          variant === "dark"
-            ? "bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
-            : "bg-slate-900/6 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]",
+          isSoft
+            ? "bg-white/18 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
+            : "bg-white/14 shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]",
         )}
       >
-        <AppleLogoIcon className={compact ? "h-5 w-5" : "h-6 w-6"} />
+        <AppleLogoIcon
+          className={cn(
+            compact ? "h-5 w-5" : "h-6 w-6",
+            "text-white",
+          )}
+        />
       </span>
 
       <span className="relative min-w-0 flex-1">
         {compact ? (
-          <span className="block whitespace-nowrap text-sm font-semibold tracking-[-0.02em]">
+          <span className="block whitespace-nowrap text-sm font-semibold tracking-[-0.02em] text-white">
             Download on App Store
           </span>
         ) : (
           <>
             <span
               className={cn(
-                "block text-[0.68rem] font-semibold uppercase tracking-[0.18em]",
-                variant === "dark" ? "text-white/68" : "text-slate-500",
+                "block text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/82",
               )}
             >
               {note}
             </span>
-            <span className="mt-1 block text-lg font-semibold tracking-[-0.03em]">
+            <span className="mt-1 block text-lg font-semibold tracking-[-0.03em] text-white">
               App Store
             </span>
           </>
@@ -85,13 +90,13 @@ export function AppStoreButton({
           className={cn(
             "relative inline-flex shrink-0 items-center justify-center rounded-full transition group-hover:translate-x-0.5",
             compact ? "h-9 w-9" : "h-10 w-10",
-            variant === "dark" ? "bg-white/10" : "bg-slate-900/6",
+            isSoft ? "bg-white/18" : "bg-white/14",
           )}
         >
           <ArrowRightIcon
             className={cn(
               compact ? "h-4 w-4" : "h-[18px] w-[18px]",
-              variant === "dark" ? "text-white/88" : "text-slate-700",
+              "text-white",
             )}
           />
         </span>
