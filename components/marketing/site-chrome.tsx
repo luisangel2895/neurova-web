@@ -43,7 +43,7 @@ function LocaleSwitch({
           className={cn(
             "rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] transition",
             locale === targetLocale
-              ? "bg-[linear-gradient(135deg,_#3d61ee_0%,_#5a95ff_56%,_#61e7cc_100%)] text-white shadow-[0_12px_26px_rgba(61,97,238,0.24)]"
+              ? "bg-[linear-gradient(135deg,_#3d61ee_0%,_#5a95ff_56%,_#61e7cc_100%)] !text-white [color:white] shadow-[0_12px_26px_rgba(61,97,238,0.24)]"
               : "text-subtle hover:bg-page hover:text-ink",
           )}
         >
