@@ -21,15 +21,17 @@ describe("manifest and sitemap", () => {
   it("keeps success pages out of the sitemap and includes alternates", () => {
     const entries = sitemap();
     const urls = entries.map((entry) => entry.url);
-    const homeEntry = entries.find((entry) => entry.url === "https://neurova.app");
+    const homeEntry = entries.find(
+      (entry) => entry.url === "https://neurova-web.vercel.app",
+    );
 
-    expect(urls).not.toContain("https://neurova.app/support/success");
-    expect(urls).not.toContain("https://neurova.app/en/support/success");
+    expect(urls).not.toContain("https://neurova-web.vercel.app/support/success");
+    expect(urls).not.toContain("https://neurova-web.vercel.app/en/support/success");
     expect(homeEntry?.alternates?.languages).toEqual({
-      es: "https://neurova.app",
-      en: "https://neurova.app/en",
-      "x-default": "https://neurova.app",
+      es: "https://neurova-web.vercel.app",
+      en: "https://neurova-web.vercel.app/en",
+      "x-default": "https://neurova-web.vercel.app",
     });
-    expect(homeEntry?.images).toContain("https://neurova.app/logo.png");
+    expect(homeEntry?.images).toContain("https://neurova-web.vercel.app/logo.png");
   });
 });

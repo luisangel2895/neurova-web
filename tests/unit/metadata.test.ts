@@ -12,14 +12,17 @@ describe("buildMetadata", () => {
       keywords: copy.seo.keywords,
     });
 
-    expect(metadata.alternates?.canonical).toBe("https://neurova.app/support");
+    expect(metadata.alternates?.canonical).toBe(
+      "https://neurova-web.vercel.app/support",
+    );
     expect(metadata.alternates?.languages).toEqual({
-      es: "https://neurova.app/support",
-      en: "https://neurova.app/en/support",
-      "x-default": "https://neurova.app/support",
+      es: "https://neurova-web.vercel.app/support",
+      en: "https://neurova-web.vercel.app/en/support",
+      "x-default": "https://neurova-web.vercel.app/support",
     });
     expect(metadata.openGraph?.locale).toBe("es_ES");
     expect(metadata.openGraph?.alternateLocale).toEqual(["en_US"]);
+    expect(metadata.openGraph?.title).toBe("Soporte oficial | Neurova");
     expect(metadata.referrer).toBe("origin-when-cross-origin");
   });
 
@@ -33,10 +36,13 @@ describe("buildMetadata", () => {
       keywords: copy.seo.keywords,
     });
 
-    expect(metadata.alternates?.canonical).toBe("https://neurova.app/en");
-    expect(metadata.openGraph?.url).toBe("https://neurova.app/en");
+    expect(metadata.alternates?.canonical).toBe("https://neurova-web.vercel.app/en");
+    expect(metadata.openGraph?.url).toBe("https://neurova-web.vercel.app/en");
     expect(metadata.openGraph?.locale).toBe("en_US");
     expect(metadata.openGraph?.alternateLocale).toEqual(["es_ES"]);
+    expect(metadata.twitter?.title).toBe(
+      "iPhone study app with flashcards, OCR, and spaced repetition | Neurova",
+    );
   });
 
   it("can mark utility pages as noindex", () => {

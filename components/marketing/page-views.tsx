@@ -16,6 +16,9 @@ import { SupportForm } from "@/components/marketing/support-form";
 import { localizedPath, type Locale } from "@/lib/i18n";
 import {
   buildBreadcrumbSchema,
+  buildFaqSchema,
+  buildWebPageSchema,
+  buildWebSiteSchema,
   buildOrganizationSchema,
   getLocalizedAbsoluteUrl,
   toAbsoluteUrl,
@@ -41,6 +44,7 @@ export function HomePageView({ locale }: { locale: Locale }) {
     screenshot: siteConfig.mediaAssets.iphoneScreenshots.map((shot) =>
       toAbsoluteUrl(shot.src),
     ),
+    featureList: copy.home.features.items.map((feature) => feature.title),
     inLanguage: locale,
     offers: {
       "@type": "Offer",
@@ -48,26 +52,6 @@ export function HomePageView({ locale }: { locale: Locale }) {
       priceCurrency: "USD",
       availability: "https://schema.org/InStock",
     },
-  };
-
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: copy.home.faq.items.map((faq) => ({
-      "@type": "Question",
-      name: faq.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: faq.answer,
-      },
-    })),
-  };
-
-  const websiteSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: siteConfig.name,
-    url: pageUrl,
   };
 
   const breadcrumbSchema = buildBreadcrumbSchema([
@@ -83,8 +67,8 @@ export function HomePageView({ locale }: { locale: Locale }) {
         data={[
           buildOrganizationSchema(locale),
           softwareApplicationSchema,
-          faqSchema,
-          websiteSchema,
+          buildFaqSchema(copy.home.faq.items),
+          buildWebSiteSchema(locale),
           breadcrumbSchema,
         ]}
       />
@@ -104,13 +88,6 @@ export function SupportPageView({ locale }: { locale: Locale }) {
   const copy = getSiteCopy(locale);
   const pagePath = localizedPath(locale, "/support");
   const pageUrl = getLocalizedAbsoluteUrl(locale, "/support");
-  const contactPageSchema = {
-    "@context": "https://schema.org",
-    "@type": "ContactPage",
-    name: `${siteConfig.name} ${copy.seo.support.title}`,
-    url: pageUrl,
-    description: copy.support.schemaDescription,
-  };
   const breadcrumbSchema = buildBreadcrumbSchema([
     {
       name: copy.navigation.home,
@@ -125,7 +102,18 @@ export function SupportPageView({ locale }: { locale: Locale }) {
   return (
     <>
       <StructuredData
-        data={[buildOrganizationSchema(locale), contactPageSchema, breadcrumbSchema]}
+        data={[
+          buildOrganizationSchema(locale),
+          buildWebPageSchema({
+            locale,
+            name: `${siteConfig.name} ${copy.seo.support.title}`,
+            url: pageUrl,
+            description: copy.support.schemaDescription,
+            type: "ContactPage",
+          }),
+          buildFaqSchema(copy.support.faqs),
+          breadcrumbSchema,
+        ]}
       />
       <div className="relative min-h-screen overflow-x-clip bg-page">
         <div className="page-noise" />
@@ -300,13 +288,6 @@ export function PrivacyPageView({ locale }: { locale: Locale }) {
   const copy = getSiteCopy(locale);
   const pagePath = localizedPath(locale, "/privacy");
   const pageUrl = getLocalizedAbsoluteUrl(locale, "/privacy");
-  const webPageSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: `${siteConfig.name} ${copy.seo.privacy.title}`,
-    url: pageUrl,
-    description: copy.privacy.schemaDescription,
-  };
   const breadcrumbSchema = buildBreadcrumbSchema([
     {
       name: copy.navigation.home,
@@ -321,7 +302,16 @@ export function PrivacyPageView({ locale }: { locale: Locale }) {
   return (
     <>
       <StructuredData
-        data={[buildOrganizationSchema(locale), webPageSchema, breadcrumbSchema]}
+        data={[
+          buildOrganizationSchema(locale),
+          buildWebPageSchema({
+            locale,
+            name: `${siteConfig.name} ${copy.seo.privacy.title}`,
+            url: pageUrl,
+            description: copy.privacy.schemaDescription,
+          }),
+          breadcrumbSchema,
+        ]}
       />
       <div className="relative min-h-screen overflow-x-clip bg-page">
         <div className="page-noise" />

@@ -5,6 +5,7 @@ import {
   getAlternateLanguageUrls,
   getAlternateOgLocales,
   getLocalizedAbsoluteUrl,
+  toAbsoluteUrl,
 } from "@/lib/seo";
 import { siteConfig } from "@/lib/site-config";
 
@@ -26,8 +27,13 @@ export function buildMetadata({
   noIndex = false,
 }: MetadataInput): Metadata {
   const canonical = getLocalizedAbsoluteUrl(locale, path);
+  const shouldIndex = siteConfig.shouldIndex && !noIndex;
+  const socialTitle = title.includes(siteConfig.name)
+    ? title
+    : `${title} | ${siteConfig.name}`;
 
   return {
+    metadataBase: new URL(siteConfig.siteUrl),
     title,
     description,
     keywords: Array.from(keywords ?? siteConfig.keywords),
@@ -43,7 +49,7 @@ export function buildMetadata({
       languages: getAlternateLanguageUrls(path),
     },
     openGraph: {
-      title,
+      title: socialTitle,
       description,
       url: canonical,
       siteName: siteConfig.name,
@@ -52,7 +58,7 @@ export function buildMetadata({
       type: "website",
       images: [
         {
-          url: "/opengraph-image",
+          url: toAbsoluteUrl("/opengraph-image"),
           width: 1200,
           height: 630,
           alt: `${siteConfig.name} preview`,
@@ -61,12 +67,13 @@ export function buildMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: socialTitle,
       description,
-      images: ["/opengraph-image"],
+      images: [toAbsoluteUrl("/opengraph-image")],
     },
-    robots: noIndex
-      ? {
+    robots: shouldIndex
+      ? undefined
+      : {
           index: false,
           follow: false,
           googleBot: {
@@ -76,9 +83,8 @@ export function buildMetadata({
             "max-snippet": -1,
             "max-video-preview": -1,
           },
-        }
-      : undefined,
-    itunes: siteConfig.appStoreId
+        },
+  itunes: siteConfig.appStoreId
       ? {
           appId: siteConfig.appStoreId,
           appArgument: siteConfig.appStoreScheme,

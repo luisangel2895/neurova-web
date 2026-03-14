@@ -40,6 +40,19 @@ type BreadcrumbItem = {
   url: string;
 };
 
+type FaqItem = {
+  question: string;
+  answer: string;
+};
+
+type WebPageSchemaInput = {
+  locale: Locale;
+  name: string;
+  url: string;
+  description: string;
+  type?: "WebPage" | "ContactPage";
+};
+
 export function buildBreadcrumbSchema(items: BreadcrumbItem[]) {
   return {
     "@context": "https://schema.org",
@@ -59,15 +72,72 @@ export function buildOrganizationSchema(locale: Locale) {
     "@type": "Organization",
     name: siteConfig.name,
     url: getLocalizedAbsoluteUrl(locale, "/"),
+    description: siteConfig.description,
     logo: toAbsoluteUrl(siteConfig.mediaAssets.logo),
+    email: siteConfig.supportEmail,
+    sameAs: siteConfig.appStoreId ? [siteConfig.appStoreUrl] : undefined,
     contactPoint: [
       {
         "@type": "ContactPoint",
         contactType: "customer support",
         email: siteConfig.supportEmail,
+        areaServed: "Worldwide",
         availableLanguage: Object.values(localeMeta).map((value) => value.label),
         url: getLocalizedAbsoluteUrl(locale, "/support"),
       },
     ],
+  };
+}
+
+export function buildFaqSchema(items: FaqItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}
+
+export function buildWebSiteSchema(locale: Locale) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteConfig.name,
+    url: getLocalizedAbsoluteUrl(locale, "/"),
+    inLanguage: localeMeta[locale].htmlLang,
+    publisher: {
+      "@type": "Organization",
+      name: siteConfig.name,
+      url: getLocalizedAbsoluteUrl(locale, "/"),
+    },
+  };
+}
+
+export function buildWebPageSchema({
+  locale,
+  name,
+  url,
+  description,
+  type = "WebPage",
+}: WebPageSchemaInput) {
+  return {
+    "@context": "https://schema.org",
+    "@type": type,
+    name,
+    url,
+    description,
+    inLanguage: localeMeta[locale].htmlLang,
+    dateModified: siteConfig.lastUpdated,
+    isPartOf: {
+      "@type": "WebSite",
+      name: siteConfig.name,
+      url: getLocalizedAbsoluteUrl(locale, "/"),
+    },
   };
 }

@@ -51,7 +51,7 @@ export const siteContent = {
         "app iOS para estudiar",
       ],
       home: {
-        title: `${siteConfig.name} | App de estudio para iPhone con flashcards, OCR y repeticion espaciada`,
+        title: "App de estudio para iPhone con flashcards, OCR y repeticion espaciada",
         description:
           "Neurova es una app de estudio para iPhone con flashcards, repeticion espaciada, OCR desde apuntes e imagenes, generacion asistida de tarjetas, insights, rachas y sincronizacion privada con iCloud.",
       },
@@ -606,7 +606,7 @@ export const siteContent = {
         "exam prep",
       ],
       home: {
-        title: `${siteConfig.name} | iPhone study app with flashcards, OCR, and spaced repetition`,
+        title: "iPhone study app with flashcards, OCR, and spaced repetition",
         description:
           "Neurova is an iPhone study app with flashcards, spaced repetition, OCR from notes and images, AI-assisted card creation, progress insights, streaks, and private iCloud sync.",
       },

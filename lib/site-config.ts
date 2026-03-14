@@ -41,14 +41,27 @@ type PolicySection = {
   bullets?: string[];
 };
 
+function normalizeSiteUrl(value?: string) {
+  if (!value) {
+    return undefined;
+  }
+
+  const trimmed = value.trim().replace(/\/$/, "");
+  return /^https?:\/\//.test(trimmed) ? trimmed : `https://${trimmed}`;
+}
+
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://neurova.app";
+  normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL) ||
+  normalizeSiteUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL) ||
+  "https://neurova-web.vercel.app";
 
 const appStoreUrl =
   process.env.NEXT_PUBLIC_APP_STORE_URL || "https://apps.apple.com/us/genre/ios/id36";
 
 const appStoreId = process.env.NEXT_PUBLIC_APP_STORE_ID;
 const appStoreScheme = process.env.NEXT_PUBLIC_APP_SCHEME;
+const googleSiteVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
+const bingSiteVerification = process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION;
 
 export const siteConfig = {
   name: "Neurova",
@@ -56,12 +69,15 @@ export const siteConfig = {
   description:
     "Neurova is an iPhone study companion for flashcards, spaced repetition, OCR note capture, progress insights, streaks, XP, and private iCloud sync.",
   siteUrl,
+  shouldIndex: process.env.VERCEL_ENV !== "preview",
   locale: "en_US",
   supportEmail: "support@neurova.app",
   responseTime: "We usually reply within 1-2 business days.",
   appStoreUrl,
   appStoreId,
   appStoreScheme,
+  googleSiteVerification,
+  bingSiteVerification,
   keywords: [
     "Neurova",
     "study app",
