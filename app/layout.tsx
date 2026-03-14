@@ -69,10 +69,6 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     statusBarStyle: "default",
   },
-  icons: {
-    icon: "/favicon.ico",
-    apple: siteConfig.mediaAssets.logo,
-  },
   itunes: siteConfig.appStoreId
     ? {
         appId: siteConfig.appStoreId,
