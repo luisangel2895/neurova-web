@@ -2,18 +2,68 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { AppStoreButton } from "@/components/marketing/app-store-button";
+import { locales, localizedHashPath, localizedPath, switchLocalePath, type Locale } from "@/lib/i18n";
+import { getSiteCopy } from "@/lib/site-content";
 import { siteConfig } from "@/lib/site-config";
+import { cn } from "@/lib/utils";
 
-function HeaderDownloadButton() {
+type SiteChromeProps = {
+  locale: Locale;
+  currentPath: string;
+};
+
+function HeaderDownloadButton({ locale }: { locale: Locale }) {
+  const copy = getSiteCopy(locale);
+
   return (
     <AppStoreButton
       size="compact"
       className="hidden sm:inline-flex"
+      compactLabel={copy.appStore.compactLabel}
+      ariaLabel={copy.appStore.ariaLabel}
     />
   );
 }
 
-export function SiteHeader() {
+function LocaleSwitch({
+  locale,
+  currentPath,
+}: SiteChromeProps) {
+  const copy = getSiteCopy(locale);
+
+  return (
+    <div className="flex items-center gap-2 rounded-full border border-line/70 bg-white/82 px-2 py-1 shadow-soft">
+      <span className="px-2 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-subtle">
+        {copy.header.languageLabel}
+      </span>
+      {locales.map((targetLocale) => (
+        <Link
+          key={targetLocale}
+          href={switchLocalePath(currentPath, targetLocale)}
+          className={cn(
+            "rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] transition",
+            locale === targetLocale
+              ? "bg-brand-700 text-white"
+              : "text-subtle hover:bg-page hover:text-ink",
+          )}
+        >
+          {targetLocale.toUpperCase()}
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+export function SiteHeader({ locale, currentPath }: SiteChromeProps) {
+  const copy = getSiteCopy(locale);
+  const navigation = [
+    { href: localizedHashPath(locale, "features"), label: copy.navigation.features },
+    { href: localizedHashPath(locale, "screenshots"), label: copy.navigation.screens },
+    { href: localizedHashPath(locale, "how-it-works"), label: copy.navigation.howItWorks },
+    { href: localizedPath(locale, "/support"), label: copy.navigation.support },
+    { href: localizedPath(locale, "/privacy"), label: copy.navigation.privacy },
+  ];
+
   return (
     <header className="sticky top-0 z-50">
       <div className="border-b border-line/60 bg-white/78 backdrop-blur-2xl">
@@ -33,13 +83,13 @@ export function SiteHeader() {
                   {siteConfig.name}
                 </span>
                 <span className="block text-xs font-medium uppercase tracking-[0.22em] text-subtle">
-                  Study smarter on iPhone
+                  {copy.header.tagline}
                 </span>
               </div>
             </Link>
 
             <nav className="hidden items-center gap-7 text-sm font-medium text-subtle md:flex">
-              {siteConfig.navigation.map((item) => (
+              {navigation.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -50,15 +100,31 @@ export function SiteHeader() {
               ))}
             </nav>
 
-            <HeaderDownloadButton />
+            <div className="hidden items-center gap-3 lg:flex">
+              <LocaleSwitch locale={locale} currentPath={currentPath} />
+              <HeaderDownloadButton locale={locale} />
+            </div>
+
+            <div className="hidden items-center gap-3 md:flex lg:hidden">
+              <HeaderDownloadButton locale={locale} />
+            </div>
           </div>
 
-          <div className="scrollbar-none flex gap-2 overflow-x-auto pb-4 md:hidden">
-            {siteConfig.navigation.map((item) => (
+          <div className="scrollbar-none flex gap-2 overflow-x-auto pb-3 md:hidden">
+            {navigation.map((item) => (
               <Link key={item.href} href={item.href} className="pill-link">
                 {item.label}
               </Link>
             ))}
+          </div>
+
+          <div className="flex items-center justify-between gap-3 pb-4 md:hidden">
+            <LocaleSwitch locale={locale} currentPath={currentPath} />
+            <AppStoreButton
+              size="compact"
+              compactLabel={copy.appStore.compactLabel}
+              ariaLabel={copy.appStore.ariaLabel}
+            />
           </div>
         </div>
       </div>
@@ -66,7 +132,9 @@ export function SiteHeader() {
   );
 }
 
-export function SiteFooter() {
+export function SiteFooter({ locale }: { locale: Locale }) {
+  const copy = getSiteCopy(locale);
+
   return (
     <footer className="border-t border-line/70 bg-white/75">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-10 lg:px-8">
@@ -85,20 +153,19 @@ export function SiteFooter() {
               </span>
             </div>
             <p className="mt-4 text-sm leading-7 text-subtle">
-              Premium study flow for iPhone with flashcards, OCR capture, spaced
-              repetition, insights, streaks, and private iCloud sync.
+              {copy.footer.description}
             </p>
           </div>
 
           <div className="flex flex-wrap gap-3 text-sm font-medium text-subtle">
-            <Link href="/" className="pill-link">
-              Home
+            <Link href={localizedPath(locale, "/")} className="pill-link">
+              {copy.navigation.home}
             </Link>
-            <Link href="/support" className="pill-link">
-              Support
+            <Link href={localizedPath(locale, "/support")} className="pill-link">
+              {copy.navigation.support}
             </Link>
-            <Link href="/privacy" className="pill-link">
-              Privacy
+            <Link href={localizedPath(locale, "/privacy")} className="pill-link">
+              {copy.navigation.privacy}
             </Link>
             <a href={`mailto:${siteConfig.supportEmail}`} className="pill-link">
               {siteConfig.supportEmail}
@@ -107,8 +174,8 @@ export function SiteFooter() {
         </div>
 
         <div className="flex flex-col gap-3 border-t border-line/70 pt-6 text-sm text-subtle md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
-          <p>Marketing URL: `/` · Support URL: `/support` · Privacy URL: `/privacy`</p>
+          <p>{copy.footer.rights}</p>
+          <p>{copy.footer.appStoreConnectNote}</p>
         </div>
       </div>
     </footer>

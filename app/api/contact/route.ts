@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
 
+import { defaultLocale, isLocale } from "@/lib/i18n";
+import { getSiteCopy } from "@/lib/site-content";
+
 type ContactPayload = {
   name?: string;
   email?: string;
   subject?: string;
   message?: string;
+  locale?: string;
 };
 
 function isValidEmail(value: string) {
@@ -13,10 +17,12 @@ function isValidEmail(value: string) {
 
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as ContactPayload | null;
+  const locale = body?.locale && isLocale(body.locale) ? body.locale : defaultLocale;
+  const errors = getSiteCopy(locale).support.form.serverErrors;
 
   if (!body) {
     return NextResponse.json(
-      { error: "Invalid request payload." },
+      { error: errors.invalidPayload },
       { status: 400 },
     );
   }
@@ -35,7 +41,7 @@ export async function POST(request: Request) {
     message.length < 20
   ) {
     return NextResponse.json(
-      { error: "Please complete all fields with valid information." },
+      { error: errors.invalidInfo },
       { status: 400 },
     );
   }

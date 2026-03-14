@@ -7,6 +7,9 @@ type AppStoreButtonProps = {
   variant?: "dark" | "light";
   size?: "default" | "compact";
   note?: string;
+  titleLabel?: string;
+  compactLabel?: string;
+  ariaLabel?: string;
   showArrow?: boolean;
 };
 
@@ -15,6 +18,9 @@ export function AppStoreButton({
   variant = "dark",
   size = "default",
   note = "Available on the",
+  titleLabel = "App Store",
+  compactLabel = "Download on App Store",
+  ariaLabel = "Download Neurova on the App Store",
   showArrow = true,
 }: AppStoreButtonProps) {
   const compact = size === "compact";
@@ -35,7 +41,7 @@ export function AppStoreButton({
           : "border-white/18 bg-[linear-gradient(135deg,_rgba(255,255,255,0.12)_0%,_rgba(255,255,255,0.03)_18%),linear-gradient(135deg,_#3d61ee_0%,_#5a95ff_52%,_#61e7cc_100%)] text-white shadow-[0_22px_54px_rgba(46,76,171,0.24)]",
         className,
       )}
-      aria-label="Download Neurova on the App Store"
+      aria-label={ariaLabel}
     >
       <span
         aria-hidden="true"
@@ -72,7 +78,7 @@ export function AppStoreButton({
               isSoft ? "text-slate-900" : "text-white",
             )}
           >
-            Download on App Store
+            {compactLabel}
           </span>
         ) : (
           <>
@@ -90,7 +96,7 @@ export function AppStoreButton({
                 isSoft ? "text-slate-900" : "text-white",
               )}
             >
-              App Store
+              {titleLabel}
             </span>
           </>
         )}

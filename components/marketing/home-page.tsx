@@ -15,6 +15,8 @@ import {
 } from "@/components/marketing/icons";
 import { Reveal } from "@/components/marketing/reveal";
 import { DeviceMockup, FaqCards, SectionHeading } from "@/components/marketing/shared";
+import { localizedPath, type Locale } from "@/lib/i18n";
+import { getSiteCopy } from "@/lib/site-content";
 import { siteConfig, type IconName } from "@/lib/site-config";
 
 const featureIconMap: Record<
@@ -34,27 +36,40 @@ const featureIconMap: Record<
   privacy: ShieldIcon,
 };
 
-const screenshotLoop = [
-  ...siteConfig.mediaAssets.iphoneScreenshots,
-  ...siteConfig.mediaAssets.iphoneScreenshots,
-];
+export function HomePage({ locale }: { locale: Locale }) {
+  const copy = getSiteCopy(locale);
+  const localizedScreenshots = siteConfig.mediaAssets.iphoneScreenshots.map(
+    (shot, index) => ({
+      src: shot.src,
+      alt: copy.media.screenshots[index]?.alt ?? shot.alt,
+      caption: copy.media.screenshots[index]?.caption ?? shot.caption,
+    }),
+  );
+  const screenshotLoop = [...localizedScreenshots, ...localizedScreenshots];
 
-export function HomePage() {
   return (
     <>
-      <HeroSection />
-      <FeatureHighlights />
-      <ScreenshotsSection />
-      <FeaturesSection />
-      <HowItWorksSection />
-      <FaqSection />
-      <FinalCtaSection />
+      <HeroSection locale={locale} copy={copy} localizedScreenshots={localizedScreenshots} />
+      <FeatureHighlights copy={copy} />
+      <ScreenshotsSection copy={copy} screenshotLoop={screenshotLoop} localizedScreenshots={localizedScreenshots} />
+      <FeaturesSection copy={copy} />
+      <HowItWorksSection copy={copy} localizedScreenshots={localizedScreenshots} />
+      <FaqSection copy={copy} />
+      <FinalCtaSection locale={locale} copy={copy} />
     </>
   );
 }
 
-function HeroSection() {
-  const heroScreens = siteConfig.mediaAssets.iphoneScreenshots;
+function HeroSection({
+  locale,
+  copy,
+  localizedScreenshots,
+}: {
+  locale: Locale;
+  copy: ReturnType<typeof getSiteCopy>;
+  localizedScreenshots: Array<{ src: string; alt: string; caption: string }>;
+}) {
+  const heroScreens = localizedScreenshots;
 
   return (
     <section className="section-spacing section-anchor relative overflow-hidden pb-8 pt-14 sm:pt-20 lg:pt-24">
@@ -65,47 +80,53 @@ function HeroSection() {
           <Reveal>
             <div className="inline-flex items-center gap-2 rounded-full border border-line/70 bg-white/80 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-brand-700 shadow-soft backdrop-blur-xl">
               <SparkIcon className="h-4 w-4" />
-              Intelligent study flow for iPhone
+              {copy.home.hero.eyebrow}
             </div>
           </Reveal>
 
           <Reveal delay={120}>
             <h1 className="mx-auto mt-6 max-w-4xl font-display text-5xl font-semibold tracking-[-0.04em] text-ink sm:text-6xl lg:text-[5.7rem] lg:leading-[0.92]">
-              Turn notes into <span className="gradient-text">high-retention study sessions</span>.
+              {copy.home.hero.titleLead}{" "}
+              <span className="gradient-text">{copy.home.hero.titleAccent}</span>.
             </h1>
           </Reveal>
 
           <Reveal delay={220}>
             <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-subtle sm:text-xl">
-              Neurova combines flashcards, spaced repetition, OCR from notes and
-              images, AI-assisted card generation, progress insights, streaks,
-              XP, and iCloud sync in one calm, premium experience.
+              {copy.home.hero.description}
             </p>
           </Reveal>
 
           <Reveal delay={320}>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <AppStoreButton className="min-w-[17.5rem]" />
-              <ActionLink href="/#screenshots" variant="secondary">
-                Explore the flow
+              <AppStoreButton
+                className="min-w-[17.5rem]"
+                note={copy.appStore.heroNote}
+                titleLabel={copy.appStore.titleLabel}
+                ariaLabel={copy.appStore.ariaLabel}
+              />
+              <ActionLink href={localizedPath(locale, "/")} hash="screenshots" variant="secondary">
+                {copy.home.hero.exploreCta}
               </ActionLink>
             </div>
           </Reveal>
 
           <Reveal delay={370}>
             <div className="mx-auto mt-4 flex flex-wrap items-center justify-center gap-3 text-sm text-subtle">
-              <span className="rounded-full border border-line/70 bg-white/80 px-4 py-2 shadow-soft">
-                iPhone-first experience
-              </span>
-              <span className="rounded-full border border-line/70 bg-white/80 px-4 py-2 shadow-soft">
-                Replace with your real App Store link later
-              </span>
+              {copy.home.hero.helperChips.map((item) => (
+                <span
+                  key={item}
+                  className="rounded-full border border-line/70 bg-white/80 px-4 py-2 shadow-soft"
+                >
+                  {item}
+                </span>
+              ))}
             </div>
           </Reveal>
 
           <Reveal delay={420}>
             <div className="mx-auto mt-8 flex max-w-3xl flex-wrap items-center justify-center gap-3">
-              {siteConfig.heroHighlights.map((item) => (
+              {copy.home.hero.highlights.map((item) => (
                 <span key={item} className="pill-link text-subtle">
                   {item}
                 </span>
@@ -123,7 +144,7 @@ function HeroSection() {
               <DeviceMockup
                 src={heroScreens[3].src}
                 alt={heroScreens[3].alt}
-                caption="Focused review mode"
+                caption={copy.home.hero.heroScreens.leftCaption}
                 className="translate-y-16 rotate-[-8deg]"
                 sizes="(max-width: 1200px) 24vw, 280px"
               />
@@ -138,10 +159,10 @@ function HeroSection() {
                     </div>
                     <div className="text-left">
                       <p className="text-xs font-semibold uppercase tracking-[0.24em] text-subtle">
-                        OCR to cards
+                        {copy.home.hero.sideCards.ocrLabel}
                       </p>
                       <p className="mt-1 text-sm font-medium text-ink">
-                        Move from raw notes to deck-ready study content.
+                        {copy.home.hero.sideCards.ocrText}
                       </p>
                     </div>
                   </div>
@@ -150,7 +171,7 @@ function HeroSection() {
                 <DeviceMockup
                   src={heroScreens[0].src}
                   alt={heroScreens[0].alt}
-                  caption="Dashboard built for momentum"
+                  caption={copy.home.hero.heroScreens.centerCaption}
                   priority
                   sizes="(max-width: 768px) 82vw, 420px"
                 />
@@ -162,10 +183,10 @@ function HeroSection() {
                     </div>
                     <div className="text-left">
                       <p className="text-xs font-semibold uppercase tracking-[0.24em] text-subtle">
-                        Private sync
+                        {copy.home.hero.sideCards.syncLabel}
                       </p>
                       <p className="mt-1 text-sm font-medium text-ink">
-                        Built around iCloud and your own CloudKit private data.
+                        {copy.home.hero.sideCards.syncText}
                       </p>
                     </div>
                   </div>
@@ -177,7 +198,7 @@ function HeroSection() {
               <DeviceMockup
                 src={heroScreens[5].src}
                 alt={heroScreens[5].alt}
-                caption="Insights that surface weak spots"
+                caption={copy.home.hero.heroScreens.rightCaption}
                 className="translate-y-10 rotate-[8deg]"
                 sizes="(max-width: 1200px) 24vw, 280px"
               />
@@ -186,24 +207,7 @@ function HeroSection() {
 
           <Reveal delay={360}>
             <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                {
-                  title: "Clear study rhythm",
-                  text: "A dashboard that keeps goals, ready cards, XP, and streaks visible without noise.",
-                },
-                {
-                  title: "Organized library",
-                  text: "Subjects and decks stay structured so generated material lands exactly where it should.",
-                },
-                {
-                  title: "Confident review",
-                  text: "Focused flashcard sessions with grading that supports a genuine spaced-repetition loop.",
-                },
-                {
-                  title: "Private by default",
-                  text: "The product is aligned with Apple-native account and sync behavior instead of ad tracking.",
-                },
-              ].map((item) => (
+              {copy.home.hero.summaryCards.map((item) => (
                 <div key={item.title} className="glass-card p-5">
                   <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700">
                     {item.title}
@@ -219,12 +223,12 @@ function HeroSection() {
   );
 }
 
-function FeatureHighlights() {
+function FeatureHighlights({ copy }: { copy: ReturnType<typeof getSiteCopy> }) {
   return (
     <section className="section-spacing section-anchor pt-8">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid gap-5 lg:grid-cols-3">
-          {siteConfig.featureHighlights.map((item, index) => (
+          {copy.home.featureHighlights.map((item, index) => (
             <Reveal key={item.title} delay={index * 100}>
               <div className="glass-card h-full p-7">
                 <div className="icon-chip">
@@ -249,15 +253,23 @@ function FeatureHighlights() {
   );
 }
 
-function ScreenshotsSection() {
+function ScreenshotsSection({
+  copy,
+  screenshotLoop,
+  localizedScreenshots,
+}: {
+  copy: ReturnType<typeof getSiteCopy>;
+  screenshotLoop: Array<{ src: string; alt: string; caption: string }>;
+  localizedScreenshots: Array<{ src: string; alt: string; caption: string }>;
+}) {
   return (
     <section id="screenshots" className="section-spacing section-anchor overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <Reveal>
           <SectionHeading
-            eyebrow="Screenshots"
-            title="A polished interface that stays quiet while your progress gets louder."
-            description="The design language comes from the app itself: soft light surfaces, cool blue depth, generous spacing, and premium cards that keep the experience focused."
+            eyebrow={copy.home.screenshots.eyebrow}
+            title={copy.home.screenshots.title}
+            description={copy.home.screenshots.description}
           />
         </Reveal>
 
@@ -266,21 +278,14 @@ function ScreenshotsSection() {
             <div className="glass-card relative overflow-hidden p-7 sm:p-8">
               <div className="absolute inset-x-0 top-0 h-32 bg-[radial-gradient(circle_at_top,_rgba(94,144,255,0.22),_transparent_68%)]" />
               <h3 className="relative font-display text-2xl font-semibold tracking-tight text-ink">
-                Built to feel native to serious study sessions
+                {copy.home.screenshots.detailTitle}
               </h3>
               <p className="relative mt-4 text-base leading-8 text-subtle">
-                The home, library, review flow, generator, and insight screens
-                all share the same visual vocabulary so the product feels coherent
-                as Neurova grows.
+                {copy.home.screenshots.detailDescription}
               </p>
 
               <div className="relative mt-8 grid gap-4 sm:grid-cols-2">
-                {[
-                  "Soft surfaces with subtle depth",
-                  "Readable hierarchy for long sessions",
-                  "Gradient accents that stay restrained",
-                  "Comfortable mobile-first spacing",
-                ].map((item) => (
+                {copy.home.screenshots.detailPoints.map((item) => (
                   <div
                     key={item}
                     className="rounded-[1.4rem] border border-line/70 bg-page/80 px-4 py-3 text-sm font-medium text-ink"
@@ -295,10 +300,10 @@ function ScreenshotsSection() {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-700">
-                    Asset slots
+                    {copy.home.screenshots.assetsEyebrow}
                   </p>
                   <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight text-ink">
-                    Easy to replace as you ship new visuals
+                    {copy.home.screenshots.assetsTitle}
                   </h3>
                 </div>
                 <Image
@@ -311,24 +316,17 @@ function ScreenshotsSection() {
               </div>
 
               <div className="mt-6 space-y-3">
-                <div className="rounded-[1.4rem] border border-line/70 bg-page/80 p-4">
-                  <p className="text-sm font-semibold text-ink">Logo / App icon</p>
-                  <p className="mt-2 text-sm leading-7 text-subtle">
-                    Replace the current asset in `public/logo.png`.
-                  </p>
-                </div>
-                <div className="rounded-[1.4rem] border border-line/70 bg-page/80 p-4">
-                  <p className="text-sm font-semibold text-ink">iPhone screenshots</p>
-                  <p className="mt-2 text-sm leading-7 text-subtle">
-                    Current gallery reads from `public/screenshots/` via `lib/site-config.ts`.
-                  </p>
-                </div>
-                <div className="rounded-[1.4rem] border border-line/70 bg-page/80 p-4">
-                  <p className="text-sm font-semibold text-ink">iPad screenshots</p>
-                  <p className="mt-2 text-sm leading-7 text-subtle">
-                    Add tablet images later in `mediaAssets.ipadScreenshots` when they are ready.
-                  </p>
-                </div>
+                {copy.home.screenshots.assetCards.map((card) => (
+                  <div
+                    key={card.title}
+                    className="rounded-[1.4rem] border border-line/70 bg-page/80 p-4"
+                  >
+                    <p className="text-sm font-semibold text-ink">{card.title}</p>
+                    <p className="mt-2 text-sm leading-7 text-subtle">
+                      {card.description}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -340,7 +338,7 @@ function ScreenshotsSection() {
           {screenshotLoop.map((shot, index) => (
             <div
               key={`${shot.src}-${index}`}
-              aria-hidden={index >= siteConfig.mediaAssets.iphoneScreenshots.length}
+              aria-hidden={index >= localizedScreenshots.length}
               className="w-[18rem] shrink-0"
             >
               <DeviceMockup
@@ -357,20 +355,20 @@ function ScreenshotsSection() {
   );
 }
 
-function FeaturesSection() {
+function FeaturesSection({ copy }: { copy: ReturnType<typeof getSiteCopy> }) {
   return (
     <section id="features" className="section-spacing section-anchor">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <Reveal>
           <SectionHeading
-            eyebrow="Features"
-            title="Everything Neurova needs to become a study system, not just a card viewer."
-            description="The product is intentionally built around the full loop: capture, organize, review, measure progress, and stay consistent over time."
+            eyebrow={copy.home.features.eyebrow}
+            title={copy.home.features.title}
+            description={copy.home.features.description}
           />
         </Reveal>
 
         <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {siteConfig.features.map((feature, index) => {
+          {copy.home.features.items.map((feature, index) => {
             const Icon = featureIconMap[feature.icon];
 
             return (
@@ -395,21 +393,27 @@ function FeaturesSection() {
   );
 }
 
-function HowItWorksSection() {
+function HowItWorksSection({
+  copy,
+  localizedScreenshots,
+}: {
+  copy: ReturnType<typeof getSiteCopy>;
+  localizedScreenshots: Array<{ src: string; alt: string; caption: string }>;
+}) {
   return (
     <section id="how-it-works" className="section-spacing section-anchor">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <Reveal>
           <SectionHeading
-            eyebrow="How it works"
-            title="A calmer study loop from raw material to long-term retention."
-            description="Neurova is structured so the workflow feels deliberate from the first import to the final review session."
+            eyebrow={copy.home.howItWorks.eyebrow}
+            title={copy.home.howItWorks.title}
+            description={copy.home.howItWorks.description}
           />
         </Reveal>
 
         <div className="mt-14 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-5">
-            {siteConfig.steps.map((step, index) => (
+            {copy.home.howItWorks.steps.map((step, index) => (
               <Reveal key={step.step} delay={index * 100}>
                 <div className="glass-card p-7 sm:p-8">
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -422,7 +426,7 @@ function HowItWorksSection() {
                       </h3>
                     </div>
                     <div className="rounded-full border border-line/70 bg-page px-4 py-2 text-sm font-medium text-subtle">
-                      Study system {step.step}
+                      {copy.home.howItWorks.systemLabel} {step.step}
                     </div>
                   </div>
                   <p className="mt-4 text-base leading-8 text-subtle">{step.description}</p>
@@ -448,34 +452,28 @@ function HowItWorksSection() {
                   <CheckCircleIcon className="h-5 w-5" />
                 </div>
                 <p className="text-sm font-semibold uppercase tracking-[0.24em] text-brand-700">
-                  Why the flow feels coherent
+                  {copy.home.howItWorks.reasonEyebrow}
                 </p>
               </div>
 
               <h3 className="mt-5 font-display text-3xl font-semibold tracking-tight text-ink">
-                One visual language across the whole product.
+                {copy.home.howItWorks.reasonTitle}
               </h3>
               <p className="mt-4 text-base leading-8 text-subtle">
-                The landing mirrors the same tone your app already communicates:
-                crisp whitespace, soft blue depth, restrained gradients, and a
-                premium light-mode foundation that can carry into future pages.
+                {copy.home.howItWorks.reasonDescription}
               </p>
 
               <div className="mt-8">
                 <DeviceMockup
-                  src={siteConfig.mediaAssets.iphoneScreenshots[6].src}
-                  alt={siteConfig.mediaAssets.iphoneScreenshots[6].alt}
-                  caption="Generator view"
+                  src={localizedScreenshots[6].src}
+                  alt={localizedScreenshots[6].alt}
+                  caption={copy.home.howItWorks.reasonCaption}
                   sizes="(max-width: 1280px) 42vw, 350px"
                 />
               </div>
 
               <div className="mt-8 space-y-3">
-                {[
-                  "Consistent blue-to-cyan accent treatment",
-                  "Glass cards and subtle shadows for a premium feel",
-                  "Animations added with restraint so the product still feels serious",
-                ].map((item) => (
+                {copy.home.howItWorks.reasonBullets.map((item) => (
                   <div key={item} className="flex items-start gap-3 rounded-[1.25rem] border border-line/70 bg-page/85 px-4 py-3">
                     <CheckCircleIcon className="mt-0.5 h-5 w-5 shrink-0 text-brand-700" />
                     <p className="text-sm leading-7 text-ink">{item}</p>
@@ -490,21 +488,21 @@ function HowItWorksSection() {
   );
 }
 
-function FaqSection() {
+function FaqSection({ copy }: { copy: ReturnType<typeof getSiteCopy> }) {
   return (
     <section id="faq" className="section-spacing section-anchor">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <Reveal>
           <SectionHeading
-            eyebrow="FAQ"
-            title="Answers to the questions users usually ask before they trust a study app."
-            description="Short, direct answers for App Store visitors, support traffic, and anyone deciding whether Neurova fits their study workflow."
+            eyebrow={copy.home.faq.eyebrow}
+            title={copy.home.faq.title}
+            description={copy.home.faq.description}
           />
         </Reveal>
 
         <Reveal delay={120}>
           <div className="mt-14">
-            <FaqCards items={siteConfig.homeFaqs} />
+            <FaqCards items={copy.home.faq.items} />
           </div>
         </Reveal>
       </div>
@@ -512,7 +510,13 @@ function FaqSection() {
   );
 }
 
-function FinalCtaSection() {
+function FinalCtaSection({
+  locale,
+  copy,
+}: {
+  locale: Locale;
+  copy: ReturnType<typeof getSiteCopy>;
+}) {
   return (
     <section className="section-spacing pt-4">
       <div className="mx-auto max-w-7xl px-6 pb-8 lg:px-8">
@@ -524,24 +528,24 @@ function FinalCtaSection() {
             <div className="relative grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.28em] text-white/74">
-                  Ready for production
+                  {copy.home.finalCta.eyebrow}
                 </p>
                 <h2 className="mt-4 max-w-2xl font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-                  Give Neurova a web presence that feels as polished as the app.
+                  {copy.home.finalCta.title}
                 </h2>
                 <p className="mt-5 max-w-2xl text-base leading-8 text-white/80 sm:text-lg">
-                  This site is ready to serve as your Marketing URL, Support URL,
-                  and Privacy Policy URL while staying flexible enough for future
-                  product pages.
+                  {copy.home.finalCta.description}
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <AppStoreButton
                     variant="light"
                     className="min-w-[17.5rem]"
-                    note="Get Neurova on the"
+                    note={copy.appStore.finalNote}
+                    titleLabel={copy.appStore.titleLabel}
+                    ariaLabel={copy.appStore.ariaLabel}
                   />
-                  <ActionLink href="/support" variant="ghost-light">
-                    Talk to support
+                  <ActionLink href={localizedPath(locale, "/support")} variant="ghost-light">
+                    {copy.home.finalCta.supportLabel}
                   </ActionLink>
                 </div>
               </div>
@@ -566,24 +570,20 @@ function FinalCtaSection() {
 
 function ActionLink({
   href,
+  hash,
   children,
   variant,
 }: {
   href: string;
+  hash?: string;
   children: React.ReactNode;
   variant: "secondary" | "ghost-light";
 }) {
   const className = variant === "secondary" ? "button-secondary" : "button-ghost-light";
 
-  const content = (
-    <>
-      <span>{children}</span>
-    </>
-  );
-
   return (
-    <Link href={href} className={className}>
-      {content}
+    <Link href={hash ? `${href}#${hash}` : href} className={className}>
+      <span>{children}</span>
     </Link>
   );
 }

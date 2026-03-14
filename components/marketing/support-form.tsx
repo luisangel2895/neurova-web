@@ -4,6 +4,8 @@ import { startTransition, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { ArrowRightIcon } from "@/components/marketing/icons";
+import { localizedPath, type Locale } from "@/lib/i18n";
+import { getSiteCopy } from "@/lib/site-content";
 import { cn } from "@/lib/utils";
 
 type FormState = {
@@ -22,35 +24,37 @@ const initialState: FormState = {
   message: "",
 };
 
-function validate(values: FormState) {
+function validate(values: FormState, locale: Locale) {
+  const copy = getSiteCopy(locale).support.form.validation;
   const errors: FormErrors = {};
 
   if (!values.name.trim()) {
-    errors.name = "Please enter your name.";
+    errors.name = copy.nameRequired;
   }
 
   if (!values.email.trim()) {
-    errors.email = "Please enter your email.";
+    errors.email = copy.emailRequired;
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
-    errors.email = "Please enter a valid email address.";
+    errors.email = copy.emailInvalid;
   }
 
   if (!values.subject.trim()) {
-    errors.subject = "Please enter a subject.";
+    errors.subject = copy.subjectRequired;
   } else if (values.subject.trim().length < 4) {
-    errors.subject = "The subject should be a little more specific.";
+    errors.subject = copy.subjectShort;
   }
 
   if (!values.message.trim()) {
-    errors.message = "Please tell us what happened.";
+    errors.message = copy.messageRequired;
   } else if (values.message.trim().length < 20) {
-    errors.message = "A few more details will help us answer faster.";
+    errors.message = copy.messageShort;
   }
 
   return errors;
 }
 
-export function SupportForm() {
+export function SupportForm({ locale }: { locale: Locale }) {
+  const formCopy = getSiteCopy(locale).support.form;
   const router = useRouter();
   const [values, setValues] = useState<FormState>(initialState);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -69,7 +73,7 @@ export function SupportForm() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const nextErrors = validate(values);
+    const nextErrors = validate(values, locale);
     setErrors(nextErrors);
 
     if (Object.keys(nextErrors).length > 0) {
@@ -85,28 +89,28 @@ export function SupportForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, locale }),
       });
 
       if (!response.ok) {
         const payload = (await response.json().catch(() => null)) as
           | { error?: string }
           | null;
-        throw new Error(payload?.error || "Unable to submit your message.");
+        throw new Error(payload?.error || formCopy.serverErrors.submitFailed);
       }
 
       setStatus("idle");
       setValues(initialState);
 
       startTransition(() => {
-        router.push("/support/success");
+        router.push(localizedPath(locale, "/support/success"));
       });
     } catch (error) {
       setStatus("error");
       setServerError(
         error instanceof Error
           ? error.message
-          : "Something went wrong while sending your message.",
+          : formCopy.serverErrors.unknown,
       );
     }
   }
@@ -115,40 +119,40 @@ export function SupportForm() {
     <form onSubmit={handleSubmit} className="glass-card space-y-5 p-7 sm:p-8">
       <div className="grid gap-5 sm:grid-cols-2">
         <Field
-          label="Name"
+          label={formCopy.fields.name.label}
           htmlFor="name"
           value={values.name}
           error={errors.name}
           onChange={(value) => updateField("name", value)}
-          placeholder="Your name"
+          placeholder={formCopy.fields.name.placeholder}
         />
         <Field
-          label="Email"
+          label={formCopy.fields.email.label}
           htmlFor="email"
           type="email"
           value={values.email}
           error={errors.email}
           onChange={(value) => updateField("email", value)}
-          placeholder="you@example.com"
+          placeholder={formCopy.fields.email.placeholder}
         />
       </div>
 
       <Field
-        label="Subject"
+        label={formCopy.fields.subject.label}
         htmlFor="subject"
         value={values.subject}
         error={errors.subject}
         onChange={(value) => updateField("subject", value)}
-        placeholder="Brief summary of the issue"
+        placeholder={formCopy.fields.subject.placeholder}
       />
 
       <div>
         <div className="mb-2 flex items-center justify-between gap-4">
           <label htmlFor="message" className="text-sm font-semibold text-ink">
-            Message
+            {formCopy.fields.message.label}
           </label>
           <span className="text-xs font-medium uppercase tracking-[0.2em] text-subtle">
-            {messageCount} chars
+            {messageCount} {formCopy.counterLabel}
           </span>
         </div>
         <textarea
@@ -156,7 +160,7 @@ export function SupportForm() {
           name="message"
           value={values.message}
           onChange={(event) => updateField("message", event.target.value)}
-          placeholder="Describe the problem, what you expected, and any steps to reproduce it."
+          placeholder={formCopy.fields.message.placeholder}
           rows={7}
           className={cn("input-field min-h-40 resize-y", errors.message && "input-error")}
           aria-invalid={Boolean(errors.message)}
@@ -177,11 +181,10 @@ export function SupportForm() {
 
       <div className="flex flex-col gap-3 border-t border-line/70 pt-5 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm leading-7 text-subtle">
-          The current implementation posts to a Next.js route handler so you can
-          swap in Formspree, Resend, or your own email pipeline later.
+          {formCopy.helperText}
         </p>
         <button type="submit" className="button-primary" disabled={isSubmitting}>
-          <span>{isSubmitting ? "Sending..." : "Send message"}</span>
+          <span>{isSubmitting ? formCopy.sendingLabel : formCopy.submitLabel}</span>
           <ArrowRightIcon className="h-4 w-4" />
         </button>
       </div>
