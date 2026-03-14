@@ -44,6 +44,9 @@ type PolicySection = {
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://neurova.app";
 
+const appStoreUrl =
+  process.env.NEXT_PUBLIC_APP_STORE_URL || "https://apps.apple.com/us/genre/ios/id36";
+
 export const siteConfig = {
   name: "Neurova",
   shortName: "Neurova",
@@ -53,8 +56,7 @@ export const siteConfig = {
   locale: "en_US",
   supportEmail: "support@neurova.app",
   responseTime: "We usually reply within 1-2 business days.",
-  appStoreUrl: "https://apps.apple.com/app/idXXXXXXXXXX",
-  appStoreIdPlaceholder: "idXXXXXXXXXX",
+  appStoreUrl,
   keywords: [
     "Neurova",
     "study app",
@@ -360,7 +362,3 @@ export const siteConfig = {
 } as const;
 
 export type SiteConfig = typeof siteConfig;
-
-export function hasRealAppStoreUrl() {
-  return !siteConfig.appStoreUrl.includes(siteConfig.appStoreIdPlaceholder);
-}

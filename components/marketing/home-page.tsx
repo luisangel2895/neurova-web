@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { AppStoreButton } from "@/components/marketing/app-store-button";
 import {
-  ArrowRightIcon,
   ChartIcon,
   CheckCircleIcon,
   CloudIcon,
@@ -15,7 +15,7 @@ import {
 } from "@/components/marketing/icons";
 import { Reveal } from "@/components/marketing/reveal";
 import { DeviceMockup, FaqCards, SectionHeading } from "@/components/marketing/shared";
-import { hasRealAppStoreUrl, siteConfig, type IconName } from "@/lib/site-config";
+import { siteConfig, type IconName } from "@/lib/site-config";
 
 const featureIconMap: Record<
   IconName,
@@ -39,37 +39,21 @@ const screenshotLoop = [
   ...siteConfig.mediaAssets.iphoneScreenshots,
 ];
 
-const hasAppStoreLink = hasRealAppStoreUrl();
-
 export function HomePage() {
-  const heroPrimaryHref = hasAppStoreLink ? siteConfig.appStoreUrl : "/support";
-  const heroPrimaryLabel = hasAppStoreLink
-    ? "Download on the App Store"
-    : "Contact support";
-
   return (
     <>
-      <HeroSection primaryHref={heroPrimaryHref} primaryLabel={heroPrimaryLabel} />
+      <HeroSection />
       <FeatureHighlights />
       <ScreenshotsSection />
       <FeaturesSection />
       <HowItWorksSection />
       <FaqSection />
-      <FinalCtaSection
-        primaryHref={heroPrimaryHref}
-        primaryLabel={heroPrimaryLabel}
-      />
+      <FinalCtaSection />
     </>
   );
 }
 
-function HeroSection({
-  primaryHref,
-  primaryLabel,
-}: {
-  primaryHref: string;
-  primaryLabel: string;
-}) {
+function HeroSection() {
   const heroScreens = siteConfig.mediaAssets.iphoneScreenshots;
 
   return (
@@ -101,12 +85,21 @@ function HeroSection({
 
           <Reveal delay={320}>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <ActionLink href={primaryHref} external={hasAppStoreLink} variant="primary">
-                {primaryLabel}
-              </ActionLink>
+              <AppStoreButton className="min-w-[17.5rem]" />
               <ActionLink href="/#screenshots" variant="secondary">
                 Explore the flow
               </ActionLink>
+            </div>
+          </Reveal>
+
+          <Reveal delay={370}>
+            <div className="mx-auto mt-4 flex flex-wrap items-center justify-center gap-3 text-sm text-subtle">
+              <span className="rounded-full border border-line/70 bg-white/80 px-4 py-2 shadow-soft">
+                iPhone-first experience
+              </span>
+              <span className="rounded-full border border-line/70 bg-white/80 px-4 py-2 shadow-soft">
+                Replace with your real App Store link later
+              </span>
             </div>
           </Reveal>
 
@@ -519,13 +512,7 @@ function FaqSection() {
   );
 }
 
-function FinalCtaSection({
-  primaryHref,
-  primaryLabel,
-}: {
-  primaryHref: string;
-  primaryLabel: string;
-}) {
+function FinalCtaSection() {
   return (
     <section className="section-spacing pt-4">
       <div className="mx-auto max-w-7xl px-6 pb-8 lg:px-8">
@@ -548,13 +535,11 @@ function FinalCtaSection({
                   product pages.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                  <ActionLink
-                    href={primaryHref}
-                    external={hasAppStoreLink}
-                    variant="inverse"
-                  >
-                    {primaryLabel}
-                  </ActionLink>
+                  <AppStoreButton
+                    variant="light"
+                    className="min-w-[17.5rem]"
+                    note="Get Neurova on the"
+                  />
                   <ActionLink href="/support" variant="ghost-light">
                     Talk to support
                   </ActionLink>
@@ -582,37 +567,19 @@ function FinalCtaSection({
 function ActionLink({
   href,
   children,
-  external = false,
   variant,
 }: {
   href: string;
   children: React.ReactNode;
-  external?: boolean;
-  variant: "primary" | "secondary" | "inverse" | "ghost-light";
+  variant: "secondary" | "ghost-light";
 }) {
-  const className =
-    variant === "primary"
-      ? "button-primary"
-      : variant === "secondary"
-        ? "button-secondary"
-        : variant === "inverse"
-          ? "button-inverse"
-          : "button-ghost-light";
+  const className = variant === "secondary" ? "button-secondary" : "button-ghost-light";
 
   const content = (
     <>
       <span>{children}</span>
-      <ArrowRightIcon className="h-4 w-4" />
     </>
   );
-
-  if (external) {
-    return (
-      <a href={href} target="_blank" rel="noreferrer" className={className}>
-        {content}
-      </a>
-    );
-  }
 
   return (
     <Link href={href} className={className}>

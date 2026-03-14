@@ -1,26 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { hasRealAppStoreUrl, siteConfig } from "@/lib/site-config";
+import { AppStoreButton } from "@/components/marketing/app-store-button";
+import { siteConfig } from "@/lib/site-config";
 
-function AppStoreButton() {
-  if (!hasRealAppStoreUrl()) {
-    return (
-      <Link href="/support" className="button-primary hidden sm:inline-flex">
-        Support
-      </Link>
-    );
-  }
-
+function HeaderDownloadButton() {
   return (
-    <a
-      href={siteConfig.appStoreUrl}
-      target="_blank"
-      rel="noreferrer"
-      className="button-primary hidden sm:inline-flex"
-    >
-      App Store
-    </a>
+    <AppStoreButton
+      size="compact"
+      className="hidden sm:inline-flex"
+    />
   );
 }
 
@@ -61,7 +50,7 @@ export function SiteHeader() {
               ))}
             </nav>
 
-            <AppStoreButton />
+            <HeaderDownloadButton />
           </div>
 
           <div className="scrollbar-none flex gap-2 overflow-x-auto pb-4 md:hidden">
