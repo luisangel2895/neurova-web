@@ -47,6 +47,9 @@ const siteUrl =
 const appStoreUrl =
   process.env.NEXT_PUBLIC_APP_STORE_URL || "https://apps.apple.com/us/genre/ios/id36";
 
+const appStoreId = process.env.NEXT_PUBLIC_APP_STORE_ID;
+const appStoreScheme = process.env.NEXT_PUBLIC_APP_SCHEME;
+
 export const siteConfig = {
   name: "Neurova",
   shortName: "Neurova",
@@ -57,6 +60,8 @@ export const siteConfig = {
   supportEmail: "support@neurova.app",
   responseTime: "We usually reply within 1-2 business days.",
   appStoreUrl,
+  appStoreId,
+  appStoreScheme,
   keywords: [
     "Neurova",
     "study app",

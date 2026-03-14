@@ -19,6 +19,8 @@ describe("buildMetadata", () => {
       "x-default": "https://neurova.app/support",
     });
     expect(metadata.openGraph?.locale).toBe("es_ES");
+    expect(metadata.openGraph?.alternateLocale).toEqual(["en_US"]);
+    expect(metadata.referrer).toBe("origin-when-cross-origin");
   });
 
   it("builds english metadata with /en canonical", () => {
@@ -34,5 +36,30 @@ describe("buildMetadata", () => {
     expect(metadata.alternates?.canonical).toBe("https://neurova.app/en");
     expect(metadata.openGraph?.url).toBe("https://neurova.app/en");
     expect(metadata.openGraph?.locale).toBe("en_US");
+    expect(metadata.openGraph?.alternateLocale).toEqual(["es_ES"]);
+  });
+
+  it("can mark utility pages as noindex", () => {
+    const copy = getSiteCopy("es");
+    const metadata = buildMetadata({
+      locale: "es",
+      title: copy.seo.supportSuccess.title,
+      description: copy.seo.supportSuccess.description,
+      path: "/support/success",
+      keywords: copy.seo.keywords,
+      noIndex: true,
+    });
+
+    expect(metadata.robots).toEqual({
+      index: false,
+      follow: false,
+      googleBot: {
+        index: false,
+        follow: false,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
+    });
   });
 });

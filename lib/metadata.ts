@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 
-import { defaultLocale, localizedPath, localeMeta, type Locale } from "@/lib/i18n";
+import { localeMeta, type Locale } from "@/lib/i18n";
+import {
+  getAlternateLanguageUrls,
+  getAlternateOgLocales,
+  getLocalizedAbsoluteUrl,
+} from "@/lib/seo";
 import { siteConfig } from "@/lib/site-config";
 
 type MetadataInput = {
@@ -9,6 +14,7 @@ type MetadataInput = {
   description: string;
   path: string;
   keywords?: ReadonlyArray<string>;
+  noIndex?: boolean;
 };
 
 export function buildMetadata({
@@ -17,24 +23,24 @@ export function buildMetadata({
   description,
   path,
   keywords,
+  noIndex = false,
 }: MetadataInput): Metadata {
-  const localizedRoute = localizedPath(locale, path);
-  const canonical =
-    localizedRoute === "/"
-      ? siteConfig.siteUrl
-      : `${siteConfig.siteUrl}${localizedRoute}`;
+  const canonical = getLocalizedAbsoluteUrl(locale, path);
 
   return {
     title,
     description,
     keywords: Array.from(keywords ?? siteConfig.keywords),
+    category: "education",
+    referrer: "origin-when-cross-origin",
+    formatDetection: {
+      telephone: false,
+      email: false,
+      address: false,
+    },
     alternates: {
       canonical,
-      languages: {
-        es: `${siteConfig.siteUrl}${localizedPath("es", path) === "/" ? "" : localizedPath("es", path)}`,
-        en: `${siteConfig.siteUrl}${localizedPath("en", path)}`,
-        "x-default": `${siteConfig.siteUrl}${localizedPath(defaultLocale, path) === "/" ? "" : localizedPath(defaultLocale, path)}`,
-      },
+      languages: getAlternateLanguageUrls(path),
     },
     openGraph: {
       title,
@@ -42,6 +48,7 @@ export function buildMetadata({
       url: canonical,
       siteName: siteConfig.name,
       locale: localeMeta[locale].ogLocale,
+      alternateLocale: getAlternateOgLocales(locale),
       type: "website",
       images: [
         {
@@ -58,5 +65,47 @@ export function buildMetadata({
       description,
       images: ["/opengraph-image"],
     },
+    robots: noIndex
+      ? {
+          index: false,
+          follow: false,
+          googleBot: {
+            index: false,
+            follow: false,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+            "max-video-preview": -1,
+          },
+        }
+      : undefined,
+    itunes: siteConfig.appStoreId
+      ? {
+          appId: siteConfig.appStoreId,
+          appArgument: siteConfig.appStoreScheme,
+        }
+      : undefined,
+    appLinks: siteConfig.appStoreId
+      ? {
+          ios: {
+            url: siteConfig.appStoreScheme || canonical,
+            app_store_id: siteConfig.appStoreId,
+            app_name: siteConfig.name,
+          },
+          iphone: {
+            url: siteConfig.appStoreScheme || canonical,
+            app_store_id: siteConfig.appStoreId,
+            app_name: siteConfig.name,
+          },
+          ipad: {
+            url: siteConfig.appStoreScheme || canonical,
+            app_store_id: siteConfig.appStoreId,
+            app_name: siteConfig.name,
+          },
+          web: {
+            url: canonical,
+            should_fallback: true,
+          },
+        }
+      : undefined,
   };
 }

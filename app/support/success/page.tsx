@@ -9,6 +9,7 @@ export const metadata = buildMetadata({
   description: copy.seo.supportSuccess.description,
   path: "/support/success",
   keywords: copy.seo.keywords,
+  noIndex: true,
 });
 
 export default function SupportSuccessPage() {

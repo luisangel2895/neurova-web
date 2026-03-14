@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { defaultLocale } from "@/lib/i18n";
+import { getAlternateOgLocales } from "@/lib/seo";
 import { getSiteCopy } from "@/lib/site-content";
 import { siteConfig } from "@/lib/site-config";
 
@@ -19,6 +20,13 @@ export const metadata: Metadata = {
   creator: siteConfig.name,
   publisher: siteConfig.name,
   category: "education",
+  referrer: "origin-when-cross-origin",
+  formatDetection: {
+    telephone: false,
+    email: false,
+    address: false,
+  },
+  manifest: "/manifest.webmanifest",
   alternates: {
     canonical: "/",
   },
@@ -28,6 +36,7 @@ export const metadata: Metadata = {
     url: siteConfig.siteUrl,
     siteName: siteConfig.name,
     locale: "es_ES",
+    alternateLocale: getAlternateOgLocales(defaultLocale),
     type: "website",
     images: [
       {
@@ -64,6 +73,35 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
     apple: siteConfig.mediaAssets.logo,
   },
+  itunes: siteConfig.appStoreId
+    ? {
+        appId: siteConfig.appStoreId,
+        appArgument: siteConfig.appStoreScheme,
+      }
+    : undefined,
+  appLinks: siteConfig.appStoreId
+    ? {
+        ios: {
+          url: siteConfig.appStoreScheme || siteConfig.siteUrl,
+          app_store_id: siteConfig.appStoreId,
+          app_name: siteConfig.name,
+        },
+        iphone: {
+          url: siteConfig.appStoreScheme || siteConfig.siteUrl,
+          app_store_id: siteConfig.appStoreId,
+          app_name: siteConfig.name,
+        },
+        ipad: {
+          url: siteConfig.appStoreScheme || siteConfig.siteUrl,
+          app_store_id: siteConfig.appStoreId,
+          app_name: siteConfig.name,
+        },
+        web: {
+          url: siteConfig.siteUrl,
+          should_fallback: true,
+        },
+      }
+    : undefined,
 };
 
 export const viewport: Viewport = {
