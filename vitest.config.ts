@@ -14,6 +14,12 @@ export default defineConfig({
       reporter: ["text", "html"],
       reportsDirectory: "./coverage",
       include: ["lib/**/*.ts", "app/api/contact/route.ts", "components/**/*.tsx"],
+      thresholds: {
+        lines: 85,
+        functions: 90,
+        branches: 75,
+        statements: 85,
+      },
     },
   },
 });

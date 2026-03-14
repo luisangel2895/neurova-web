@@ -55,7 +55,7 @@ describe("marketing page views", () => {
       screen.getByLabelText(copy.support.form.fields.name.label),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: copy.support.form.submitIdle }),
+      screen.getByRole("button", { name: copy.support.form.submitLabel }),
     ).toBeInTheDocument();
     expect(
       screen
