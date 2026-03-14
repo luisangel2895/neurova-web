@@ -3,6 +3,8 @@ import { expect, test } from "@playwright/test";
 test("renders the spanish home and switches to english", async ({ page }) => {
   await page.goto("/");
 
+  await expect(page.locator("html")).toHaveAttribute("lang", "es");
+
   await expect(
     page.getByRole("heading", {
       name: /Convierte tus apuntes en sesiones de estudio de alta retencion/i,
@@ -21,6 +23,7 @@ test("renders the spanish home and switches to english", async ({ page }) => {
   ]);
 
   await expect(page).toHaveURL(/\/en$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(
     page.getByRole("heading", {
       name: /Turn notes into high-retention study sessions/i,
