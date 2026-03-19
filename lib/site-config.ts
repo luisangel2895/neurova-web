@@ -56,9 +56,10 @@ const siteUrl =
   "https://neurova-web.vercel.app";
 
 const appStoreUrl =
-  process.env.NEXT_PUBLIC_APP_STORE_URL || "https://apps.apple.com/us/genre/ios/id36";
+  process.env.NEXT_PUBLIC_APP_STORE_URL ||
+  "https://apps.apple.com/ar/app/neurova-study/id6760527720";
 
-const appStoreId = process.env.NEXT_PUBLIC_APP_STORE_ID;
+const appStoreId = process.env.NEXT_PUBLIC_APP_STORE_ID || "6760527720";
 const appStoreScheme = process.env.NEXT_PUBLIC_APP_SCHEME;
 const googleSiteVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
 const bingSiteVerification = process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION;
