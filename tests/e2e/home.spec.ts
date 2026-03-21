@@ -15,7 +15,7 @@ test("renders the spanish home and switches to english", async ({ page }) => {
     page.getByRole("link", { name: /Descargar Neurova en App Store/i }).first(),
   ).toBeVisible();
 
-  const englishSwitch = page.locator('a[href="/en"]').first();
+  const englishSwitch = page.locator('header a[href="/en"]').last();
   await expect(englishSwitch).toBeVisible();
   await Promise.all([
     page.waitForURL("**/en"),
@@ -29,4 +29,26 @@ test("renders the spanish home and switches to english", async ({ page }) => {
       name: /Turn notes into high-retention study sessions/i,
     }),
   ).toBeVisible();
+});
+
+test("shows an optimized mobile navigation panel", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+
+  const openNavigationButton = page.getByRole("button", {
+    name: /Abrir navegacion/i,
+  });
+
+  await expect(openNavigationButton).toBeVisible();
+  await openNavigationButton.click();
+
+  await expect(page.getByText(/Explora Neurova/i)).toBeVisible();
+  await expect(page.getByRole("link", { name: /Funciones/i })).toBeVisible();
+
+  await Promise.all([
+    page.waitForURL("**/support"),
+    page.getByRole("link", { name: /Soporte/i }).first().click(),
+  ]);
+
+  await expect(page).toHaveURL(/\/support$/);
 });
