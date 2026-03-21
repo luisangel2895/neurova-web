@@ -113,38 +113,29 @@ export function MobileHeaderNav({
         )}
       >
         <div className="overflow-hidden">
-          <div className="glass-card overflow-hidden p-2.5">
-            <div className="flex items-center justify-between gap-3 border-b border-line/60 px-2 py-2.5">
-              <div>
-                <p className="text-[0.62rem] font-semibold uppercase tracking-[0.26em] text-brand-700">
-                  {copy.header.mobileNavigationTitle}
-                </p>
-                <p className="mt-1 text-xs leading-5 text-subtle">
-                  {copy.header.mobileNavigationDescription}
-                </p>
-              </div>
-              <span className="rounded-full border border-line/70 bg-page/80 px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-subtle">
-                {navigation.length}
-              </span>
+          <div className="glass-card overflow-hidden p-2">
+            <div className="border-b border-line/55 px-2.5 py-2.5">
+              <p className="text-[0.58rem] font-semibold uppercase tracking-[0.28em] text-brand-700">
+                {copy.header.mobileNavigationTitle}
+              </p>
+              <p className="mt-1 text-[0.78rem] leading-5 text-subtle">
+                {copy.header.mobileNavigationDescription}
+              </p>
             </div>
 
-            <div className="mt-1.5 space-y-1">
-              {navigation.map((item, index) => (
+            <div className="mt-1">
+              {navigation.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className="group flex items-center gap-3 rounded-[1.2rem] px-3 py-3 transition hover:bg-page/80"
+                  className="group flex items-center gap-3 rounded-[1rem] px-2.5 py-2.5 transition hover:bg-page/72"
                 >
-                  <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,_rgba(61,97,238,0.08),_rgba(97,231,204,0.14))] text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-brand-700">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="min-w-0 flex-1 text-[1rem] font-semibold tracking-[-0.025em] text-ink">
+                  <span className="inline-flex h-2.5 w-2.5 shrink-0 rounded-full bg-[linear-gradient(135deg,_#3d61ee_0%,_#5a95ff_56%,_#61e7cc_100%)] shadow-[0_6px_16px_rgba(61,97,238,0.24)]" />
+                  <span className="min-w-0 flex-1 text-[0.98rem] font-semibold tracking-[-0.025em] text-ink">
                     {item.label}
                   </span>
-                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,_rgba(61,97,238,0.1),_rgba(97,231,204,0.14))] text-brand-700 transition group-hover:translate-x-0.5">
-                    <ArrowRightIcon className="h-3.5 w-3.5" />
-                  </span>
+                  <ArrowRightIcon className="h-4 w-4 shrink-0 text-subtle transition group-hover:translate-x-0.5 group-hover:text-brand-700" />
                 </Link>
               ))}
             </div>
