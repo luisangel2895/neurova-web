@@ -2,7 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { AppStoreButton } from "@/components/marketing/app-store-button";
-import { locales, localizedHashPath, localizedPath, switchLocalePath, type Locale } from "@/lib/i18n";
+import { MobileHeaderNav } from "@/components/marketing/mobile-header-nav";
+import {
+  locales,
+  localizedHashPath,
+  localizedPath,
+  switchLocalePath,
+  type Locale,
+} from "@/lib/i18n";
 import { getSiteCopy } from "@/lib/site-content";
 import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
@@ -69,7 +76,14 @@ export function SiteHeader({ locale, currentPath }: SiteChromeProps) {
     <header className="sticky top-0 z-50">
       <div className="border-b border-line/60 bg-white/78 backdrop-blur-2xl">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4 py-4">
+          <MobileHeaderNav
+            locale={locale}
+            currentPath={currentPath}
+            localizedHomePath={localizedHomePath}
+            navigation={navigation}
+          />
+
+          <div className="hidden items-center justify-between gap-4 py-4 md:flex">
             <Link href={localizedHomePath} className="flex items-center gap-3">
               <Image
                 src={siteConfig.mediaAssets.logo}
@@ -89,7 +103,7 @@ export function SiteHeader({ locale, currentPath }: SiteChromeProps) {
               </div>
             </Link>
 
-            <nav className="hidden items-center gap-7 text-sm font-medium text-subtle md:flex">
+            <nav className="hidden items-center gap-7 text-sm font-medium text-subtle lg:flex">
               {navigation.map((item) => (
                 <Link
                   key={item.href}
@@ -101,31 +115,14 @@ export function SiteHeader({ locale, currentPath }: SiteChromeProps) {
               ))}
             </nav>
 
-            <div className="hidden items-center gap-3 lg:flex">
+            <div className="hidden items-center gap-3 xl:flex">
               <LocaleSwitch locale={locale} currentPath={currentPath} />
               <HeaderDownloadButton locale={locale} />
             </div>
 
-            <div className="hidden items-center gap-3 md:flex lg:hidden">
+            <div className="hidden items-center gap-3 md:flex xl:hidden">
               <HeaderDownloadButton locale={locale} />
             </div>
-          </div>
-
-          <div className="scrollbar-none flex gap-2 overflow-x-auto pb-3 md:hidden">
-            {navigation.map((item) => (
-              <Link key={item.href} href={item.href} className="pill-link">
-                {item.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="flex items-center justify-between gap-3 pb-4 md:hidden">
-            <LocaleSwitch locale={locale} currentPath={currentPath} />
-            <AppStoreButton
-              size="compact"
-              compactLabel={copy.appStore.compactLabel}
-              ariaLabel={copy.appStore.ariaLabel}
-            />
           </div>
         </div>
       </div>

@@ -151,6 +151,25 @@ export function ArrowRightIcon(props: IconProps) {
   );
 }
 
+export function MenuIcon(props: IconProps) {
+  return (
+    <SvgBase {...props}>
+      <path d="M4 7h16" />
+      <path d="M4 12h16" />
+      <path d="M4 17h16" />
+    </SvgBase>
+  );
+}
+
+export function CloseIcon(props: IconProps) {
+  return (
+    <SvgBase {...props}>
+      <path d="M6 6l12 12" />
+      <path d="M18 6 6 18" />
+    </SvgBase>
+  );
+}
+
 export function AppleLogoIcon(props: IconProps) {
   return (
     <svg

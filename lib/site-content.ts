@@ -82,6 +82,11 @@ export const siteContent = {
     header: {
       tagline: "Estudia mejor en iPhone",
       languageLabel: "Idioma",
+      openNavigationLabel: "Abrir navegacion",
+      closeNavigationLabel: "Cerrar navegacion",
+      mobileNavigationTitle: "Explora Neurova",
+      mobileNavigationDescription:
+        "Accesos rapidos a funciones, capturas, soporte y privacidad.",
     },
     footer: {
       description:
@@ -637,6 +642,11 @@ export const siteContent = {
     header: {
       tagline: "Study smarter on iPhone",
       languageLabel: "Language",
+      openNavigationLabel: "Open navigation",
+      closeNavigationLabel: "Close navigation",
+      mobileNavigationTitle: "Explore Neurova",
+      mobileNavigationDescription:
+        "Quick access to features, screenshots, support, and privacy.",
     },
     footer: {
       description:
