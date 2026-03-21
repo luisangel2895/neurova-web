@@ -113,37 +113,37 @@ export function MobileHeaderNav({
         )}
       >
         <div className="overflow-hidden">
-          <div className="glass-card overflow-hidden p-3">
-            <div className="border-b border-line/70 px-2 pb-3">
-              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.26em] text-brand-700">
-                {copy.header.mobileNavigationTitle}
-              </p>
-              <p className="mt-2 text-sm leading-6 text-subtle">
-                {copy.header.mobileNavigationDescription}
-              </p>
+          <div className="glass-card overflow-hidden p-2.5">
+            <div className="flex items-center justify-between gap-3 border-b border-line/60 px-2 py-2.5">
+              <div>
+                <p className="text-[0.62rem] font-semibold uppercase tracking-[0.26em] text-brand-700">
+                  {copy.header.mobileNavigationTitle}
+                </p>
+                <p className="mt-1 text-xs leading-5 text-subtle">
+                  {copy.header.mobileNavigationDescription}
+                </p>
+              </div>
+              <span className="rounded-full border border-line/70 bg-page/80 px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-subtle">
+                {navigation.length}
+              </span>
             </div>
 
-            <div className="mt-3 grid grid-cols-2 gap-2">
+            <div className="mt-1.5 space-y-1">
               {navigation.map((item, index) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className={cn(
-                    "group rounded-[1.45rem] border border-line/70 bg-[linear-gradient(180deg,_rgba(255,255,255,0.98),_rgba(241,246,255,0.9))] p-4 shadow-[0_16px_36px_rgba(40,69,126,0.08)] transition hover:-translate-y-0.5",
-                    navigation.length % 2 === 1 && index === navigation.length - 1
-                      ? "col-span-2"
-                      : "",
-                  )}
+                  className="group flex items-center gap-3 rounded-[1.2rem] px-3 py-3 transition hover:bg-page/80"
                 >
-                  <span className="text-[0.62rem] font-semibold uppercase tracking-[0.26em] text-subtle">
+                  <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,_rgba(61,97,238,0.08),_rgba(97,231,204,0.14))] text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-brand-700">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <span className="mt-3 block text-lg font-semibold tracking-[-0.03em] text-ink">
+                  <span className="min-w-0 flex-1 text-[1rem] font-semibold tracking-[-0.025em] text-ink">
                     {item.label}
                   </span>
-                  <span className="mt-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[linear-gradient(135deg,_rgba(61,97,238,0.12),_rgba(97,231,204,0.18))] text-brand-700 transition group-hover:translate-x-0.5">
-                    <ArrowRightIcon className="h-4 w-4" />
+                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,_rgba(61,97,238,0.1),_rgba(97,231,204,0.14))] text-brand-700 transition group-hover:translate-x-0.5">
+                    <ArrowRightIcon className="h-3.5 w-3.5" />
                   </span>
                 </Link>
               ))}
